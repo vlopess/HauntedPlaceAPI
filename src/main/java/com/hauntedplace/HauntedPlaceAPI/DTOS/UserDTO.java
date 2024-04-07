@@ -4,7 +4,7 @@ package com.hauntedplace.HauntedPlaceAPI.DTOS;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
+import org.springframework.data.domain.Page;
 
 
 import java.util.List;
@@ -33,6 +33,7 @@ public class UserDTO {
     public Long getId() {
         return id;
     }
+    public void setId(Long id) {}
     public String getName() {
         return this.name;
     }
@@ -53,8 +54,8 @@ public class UserDTO {
         this.password = password;
     }
 
-    public static List<UserDTO> convert(List<User> users) {
-        return users.stream().map(UserDTO::new).toList();
+    public static Page<UserDTO> convert(Page<User> users) {
+        return users.map(UserDTO::new);
                 //.collect(Collectors.toList());
     }
 
