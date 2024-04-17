@@ -14,7 +14,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String username;
     private String email;
     private String password;
 
@@ -22,7 +22,7 @@ public class User implements UserDetails {
 
     public User(UserDTO userDTO) {
         this.id = userDTO.getId();
-        this.name = userDTO.getName();
+        this.username = userDTO.getUsername();
         this.email = userDTO.getEmail();
         this.password = userDTO.getPassword();
     }
@@ -33,12 +33,8 @@ public class User implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getName() {
-        return this.name;
-    }
-    public void setName(String name){
-        this.name = name;
+    public void setUsername(String username){
+        this.username = username;
     }
     public String getEmail() {
         return this.email;
@@ -58,27 +54,27 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.name;
+        return this.username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public void setPassword(String password) {

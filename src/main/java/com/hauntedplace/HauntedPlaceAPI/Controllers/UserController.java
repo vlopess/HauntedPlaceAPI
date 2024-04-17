@@ -35,8 +35,8 @@ public class UserController {
         return UserDTO.convert(userService.getAllUsers(pageable));
     }
 
-    @PostMapping("/addUser")
-    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriBuilder) {
+    @PostMapping("/register")
+    public ResponseEntity addUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriBuilder) {
         User user = userService.addUser(userDTO);
         URI uri = uriBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body("User added!");
@@ -44,14 +44,14 @@ public class UserController {
 
     @PutMapping("{id}")
     @Transactional
-    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         return userService.updateUser(id, userDTO);
     }
 
 
     @DeleteMapping("{id}")
     @Transactional
-    public ResponseEntity<Object> deleteUser(@PathVariable Long id){
+    public ResponseEntity deleteUser(@PathVariable Long id){
         return userService.deleteUser(id);
     }
 }

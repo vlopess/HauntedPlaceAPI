@@ -6,25 +6,22 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
 
-
-import java.util.List;
-
 public class UserDTO {
     private Long id;
-    @NotBlank(message="Enter name")
-    private String name;
+    @NotBlank(message="Enter username")
+    private String username;
     @Email
     private String email;
     @NotBlank(message="Enter password")
     private String password;
 
     public UserDTO(User user) {
-        this(user.getId(),user.getEmail(), user.getName(), user.getPassword());
+        this(user.getId(),user.getUsername(), user.getEmail(), user.getPassword());
     }
 
-    public UserDTO(Long id, String name, String email, String password) {
+    public UserDTO(Long id, String username, String email, String password) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
 
@@ -33,12 +30,14 @@ public class UserDTO {
     public Long getId() {
         return id;
     }
-    public void setId(Long id) {}
-    public String getName() {
-        return this.name;
+    public void setId(Long id) {
+        this.id = id;
     }
-    public void setName(String name){
-        this.name = name;
+    public String getUsername() {
+        return this.username;
+    }
+    public void setUsername(String username){
+        this.username = username;
     }
     public String getEmail() {
         return this.email;
