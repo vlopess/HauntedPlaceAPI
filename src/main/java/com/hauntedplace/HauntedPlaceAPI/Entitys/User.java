@@ -1,11 +1,14 @@
 package com.hauntedplace.HauntedPlaceAPI.Entitys;
+import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +20,20 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private String profilePictureUrl;
+    private String bio;
+    private String localization;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "users_tags",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags = new ArrayList<Tag>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<Post>();
 
     public User(){}
 
@@ -25,6 +42,11 @@ public class User implements UserDetails {
         this.username = userDTO.getUsername();
         this.email = userDTO.getEmail();
         this.password = userDTO.getPassword();
+        this.profilePictureUrl = userDTO.getProfilePictureUrl();
+        this.bio = userDTO.getBio();
+        this.localization = userDTO.getLocalization();
+        this.tags = userDTO.getTags();
+        this.posts = userDTO.getPosts();
     }
 
     public Long getId() {
@@ -43,14 +65,64 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+    public List<Tag> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+    public String getBio() {
+        return bio;
+    }
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+    public String getLocalization() {
+        return localization;
+    }
+    public void setLocalization(String localization) {
+        this.localization = localization;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPassword() {
         return password;
     }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
 
     @Override
     public String getUsername() {
@@ -77,7 +149,4 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

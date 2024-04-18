@@ -1,10 +1,17 @@
 package com.hauntedplace.HauntedPlaceAPI.DTOS;
 
-
+import com.hauntedplace.HauntedPlaceAPI.Entitys.Post;
+import com.hauntedplace.HauntedPlaceAPI.Entitys.Tag;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.data.domain.Page;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDTO {
     private Long id;
@@ -14,17 +21,24 @@ public class UserDTO {
     private String email;
     @NotBlank(message="Enter password")
     private String password;
+    private String profilePictureUrl;
+    private String bio;
+    private String localization;
+    private List<Tag> tags = new ArrayList<Tag>();
+    private List<Post> posts = new ArrayList<Post>();
+
+    public UserDTO(){}
 
     public UserDTO(User user) {
-        this(user.getId(),user.getUsername(), user.getEmail(), user.getPassword());
-    }
-
-    public UserDTO(Long id, String username, String email, String password) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.profilePictureUrl = user.getProfilePictureUrl();
+        this.bio = user.getBio();
+        this.localization = user.getLocalization();
+        this.tags = user.getTags();
+        this.posts = user.getPosts();
     }
 
     public Long getId() {
@@ -34,7 +48,7 @@ public class UserDTO {
         this.id = id;
     }
     public String getUsername() {
-        return this.username;
+        return username;
     }
     public void setUsername(String username){
         this.username = username;
@@ -46,17 +60,50 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getPassword() {
-        return this.password;
+    public List<Tag> getTags() {
+        return this.tags;
     }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+    public String getBio() {
+        return bio;
+    }
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+    public String getLocalization() {
+        return localization;
+    }
+    public void setLocalization(String localization) {
+        this.localization = localization;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public static Page<UserDTO> convert(Page<User> users) {
-        return users.map(UserDTO::new);
-                //.collect(Collectors.toList());
+    public String getPassword() {
+        return password;
     }
 
+    public List<Post> getPosts() {
+        return posts;
+    }
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
 }
-

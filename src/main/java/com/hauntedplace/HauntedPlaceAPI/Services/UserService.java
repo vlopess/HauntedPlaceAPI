@@ -1,5 +1,6 @@
 package com.hauntedplace.HauntedPlaceAPI.Services;
 
+import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
 import com.hauntedplace.HauntedPlaceAPI.Repository.UserRepository;
@@ -25,6 +26,11 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
+    public ResponseEntity<UserDTO> getUserbyId(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.map(value -> ResponseEntity.ok(new UserDTO(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     public User addUser(UserDTO userDTO) {
         User user = new User(userDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -35,18 +41,16 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public ResponseEntity<UserDTO> updateUser(Long id, UserDTO userDTO) {
+    public ResponseEntity<LoginDTO> updateUser(Long id, UserDTO userDTO) {
         Optional<User> user = getUserById(id);
         if (user.isPresent()) {
-            userDTO.setId(id);
-            User newUser = new User(userDTO);
-            userRepository.save(newUser);
-//            Na forma abaixo funciona, no entanto, por não saber algo o atributo modificado, teriamos que setar um por um
-//            User newUser = user.get();
-//            newUser.setUsername(userDTO.getUsername());
-//            newUser.setEmail(userDTO.getEmail());
-//            newUser.setPassword(userDTO.getPassword());
-            return ResponseEntity.ok(new UserDTO(newUser));
+            User newUser = user.get();
+            newUser.setUsername(userDTO.getUsername());
+            newUser.setEmail(userDTO.getEmail());
+            newUser.setLocalization(userDTO.getLocalization());
+            newUser.setBio(userDTO.getBio());
+            newUser.setProfilePictureUrl(userDTO.getProfilePictureUrl());
+            return ResponseEntity.ok(new LoginDTO(newUser));
         }
         return ResponseEntity.notFound().build();
     }
