@@ -1,6 +1,7 @@
 package com.hauntedplace.HauntedPlaceAPI.Entitys;
 
 
+import com.hauntedplace.HauntedPlaceAPI.Models.Enums.TagEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,15 @@ public class Tag {
         this.id = id;
         this.description = description;
     }
+    public Tag(Long id) {
+        this.id = id;
+    }
+
+    public Tag(TagEnum tagEnum) {
+        this.id = (long) tagEnum.ordinal() + 1;
+        this.description = tagEnum.name();
+    }
+
 
     public Long getId() {
         return id;
