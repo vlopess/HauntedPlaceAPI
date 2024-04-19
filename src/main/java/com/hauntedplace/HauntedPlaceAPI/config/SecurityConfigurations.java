@@ -32,7 +32,7 @@ public class SecurityConfigurations {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> {
-                    requests.requestMatchers(HttpMethod.POST, "/users/register").permitAll();
+                    requests.requestMatchers(HttpMethod.POST, "/user/register").permitAll();
                     requests.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     requests.anyRequest().authenticated();
                 })
