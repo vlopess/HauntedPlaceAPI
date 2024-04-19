@@ -38,7 +38,7 @@ public class UserDTO {
         this.bio = user.getBio();
         this.localization = user.getLocalization();
         this.tags = user.getTags();
-        this.posts = user.getPosts();
+//        this.posts = user.getPosts();
     }
 
     public Long getId() {
