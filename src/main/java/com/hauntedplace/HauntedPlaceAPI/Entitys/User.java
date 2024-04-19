@@ -35,6 +35,22 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<Post>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_followers",
+            joinColumns = @JoinColumn(name = "user_followed_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_follower_id")
+    )
+    private List<User> following = new ArrayList<User>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_followers",
+            joinColumns = @JoinColumn(name = "user_follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_followed_id")
+    )
+    private List<User> followers = new ArrayList<User>();
+
     public User(){}
 
     public User(UserDTO userDTO) {
