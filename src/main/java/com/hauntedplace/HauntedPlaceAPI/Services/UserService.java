@@ -8,6 +8,7 @@ import com.hauntedplace.HauntedPlaceAPI.Repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -29,6 +30,12 @@ public class UserService {
     public ResponseEntity<UserDTO> getUserbyId(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(value -> ResponseEntity.ok(new UserDTO(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    public ResponseEntity<UserDTO> getUserByUsername(String username) {
+        UserDetails user = userRepository.findByUsername(username);
+        if(user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new UserDTO((User) user));
     }
 
     public User addUser(UserDTO userDTO) {

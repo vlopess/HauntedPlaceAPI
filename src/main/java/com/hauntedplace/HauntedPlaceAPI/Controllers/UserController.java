@@ -20,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -30,14 +30,19 @@ public class UserController {
     }
 
 
-    @GetMapping
+    @GetMapping("/users")
     public Page<LoginDTO> getAllUsers(Pageable pageable) {
         return LoginDTO.convert(userService.getAllUsers(pageable));
     }
 
-    @GetMapping(value = "/user/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity<UserDTO> getUserById(@RequestParam Long id) {
         return userService.getUserbyId(id);
+    }
+
+    @GetMapping(value = "/{username}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String username) {
+        return userService.getUserByUsername(username);
     }
 
     @PostMapping("/register")
