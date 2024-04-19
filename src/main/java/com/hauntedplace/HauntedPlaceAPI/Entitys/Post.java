@@ -15,13 +15,14 @@ public class Post {
     private String urlImage;
     @ManyToOne
     private User user;
-    private TagEnum tag;
+    @ManyToOne
+    private Tag tag;
     private String content;
     private Date createdAt;
 
     public Post() {}
 
-    public Post(Long id, String title, String urlImage, User user, TagEnum tag, String content, Date createdAt) {
+    public Post(Long id, String title, String urlImage, User user, Tag tag, String content, Date createdAt) {
         this.id = id;
         this.title = title;
         this.urlImage = urlImage;
@@ -35,9 +36,9 @@ public class Post {
         this.id = postDTO.getId();
         this.title = postDTO.getTitle();
         this.urlImage = postDTO.getUrlImage();
-        this.user = postDTO.getUser();
-        this.tag = postDTO.getTag();
+        this.user = new User(postDTO.getUser());
         this.content = postDTO.getContent();
+        this.tag = new Tag(postDTO.getTag());
         this.createdAt = postDTO.getCreatedAt();
     }
 
@@ -70,11 +71,11 @@ public class Post {
     public void setUser(User user) {
         this.user = user;
     }
-    public TagEnum getTag() {
+    public Tag getTag() {
         return tag;
     }
 
-    public void setTag(TagEnum tag) {
+    public void setTag(Tag tag) {
         this.tag = tag;
     }
 

@@ -4,21 +4,24 @@ import com.hauntedplace.HauntedPlaceAPI.Entitys.Post;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
 import com.hauntedplace.HauntedPlaceAPI.Models.Enums.TagEnum;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
 public class PostDTO {
     private Long id;
+    @NotBlank(message = "title is required")
     private String title;
     private String urlImage;
-    private User user;
+    private UserDTO user;
     private TagEnum tag;
+    @NotBlank(message = "content is required")
     private String content;
     private Date createdAt;
 
     public PostDTO() {}
 
-    public PostDTO(Long id, String title, String urlImage, User user, TagEnum tag, String content, Date createdAt) {
+    public PostDTO(Long id, String title, String urlImage, UserDTO user, TagEnum tag, String content, Date createdAt) {
         this.id = id;
         this.title = title;
         this.urlImage = urlImage;
@@ -32,10 +35,10 @@ public class PostDTO {
         this.id = post.getId();
         this.title = post.getTitle();
         this.urlImage = post.getUrlImage();
-        this.user = post.getUser();
-        this.tag = post.getTag();
+        this.user = new UserDTO(post.getUser());
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
+        this.tag = TagEnum.valueOf(post.getTag().getDescription());
     }
 
     public Long getId() {
@@ -60,11 +63,11 @@ public class PostDTO {
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
     public TagEnum getTag() {
