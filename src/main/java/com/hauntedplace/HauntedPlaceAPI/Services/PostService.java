@@ -37,7 +37,7 @@ public class PostService {
 
     public ResponseEntity<List<PostDTO>> getPostAllUser(String username) {
         var posts = postRepository.findByUserUsername(username);
-        if (posts == null) return ResponseEntity.notFound().build();
+        if (posts.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
     }
 
@@ -54,7 +54,7 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty()) return ResponseEntity.notFound().build();
         postRepository.delete(post.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("delete was successful!");
     }
 
 }
