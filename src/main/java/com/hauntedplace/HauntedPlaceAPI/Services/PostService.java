@@ -1,11 +1,8 @@
 package com.hauntedplace.HauntedPlaceAPI.Services;
 
 
-import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.PostDTO;
-import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.Post;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
 import com.hauntedplace.HauntedPlaceAPI.Repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

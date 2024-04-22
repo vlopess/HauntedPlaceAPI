@@ -1,14 +1,9 @@
 package com.hauntedplace.HauntedPlaceAPI.Models;
 
 import com.hauntedplace.HauntedPlaceAPI.DTOS.PostDTO;
-import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserSocialMediaDTO;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.Post;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.Tag;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.UserSocialMedia;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +16,11 @@ public class UserDetail {
     private String bio;
     private String localization;
     private Boolean isFollowed;
-    private List<Tag> tags = new ArrayList<Tag>();
-    private List<PostDTO> posts = new ArrayList<PostDTO>();
-    private List<UserOverView> followers = new ArrayList<UserOverView>();
-    private List<UserOverView> following = new ArrayList<UserOverView>();
-    private List<UserSocialMediaDTO> socialMedias = new ArrayList<UserSocialMediaDTO>();
+    private List<Tag> tags = new ArrayList<>();
+    private List<PostDTO> posts = new ArrayList<>();
+    private List<UserOverView> followers = new ArrayList<>();
+    private List<UserOverView> following = new ArrayList<>();
+    private List<UserSocialMediaDTO> socialMedias = new ArrayList<>();
 
 
 

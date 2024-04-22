@@ -1,11 +1,10 @@
 package com.hauntedplace.HauntedPlaceAPI.DTOS;
 
 import com.hauntedplace.HauntedPlaceAPI.Entitys.Post;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
 import com.hauntedplace.HauntedPlaceAPI.Models.EncryptedId;
 import com.hauntedplace.HauntedPlaceAPI.Models.Enums.TagEnum;
 import com.hauntedplace.HauntedPlaceAPI.Models.UserOverView;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;

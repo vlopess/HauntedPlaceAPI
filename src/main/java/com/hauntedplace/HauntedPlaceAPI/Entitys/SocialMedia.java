@@ -1,6 +1,6 @@
 package com.hauntedplace.HauntedPlaceAPI.Entitys;
 
-import com.hauntedplace.HauntedPlaceAPI.Models.Enums.TagEnum;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

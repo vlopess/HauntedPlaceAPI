@@ -1,13 +1,10 @@
 package com.hauntedplace.HauntedPlaceAPI.Entitys;
-import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Models.EncryptedId;
 import com.hauntedplace.HauntedPlaceAPI.Models.UserOverView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,10 +31,10 @@ public class User implements UserDetails {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags = new ArrayList<Tag>();
+    private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<Post>();
+    private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -45,7 +42,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_follower_id"),
             inverseJoinColumns = @JoinColumn(name = "user_followed_id")
     )
-    private List<User> following = new ArrayList<User>();
+    private List<User> following = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -53,10 +50,10 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_followed_id"),
             inverseJoinColumns = @JoinColumn(name = "user_follower_id")
     )
-    private List<User> followers = new ArrayList<User>();
+    private List<User> followers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<UserSocialMedia> socialMedias = new ArrayList<UserSocialMedia>();
+    private List<UserSocialMedia> socialMedias = new ArrayList<>();
 
     public User(){}
 

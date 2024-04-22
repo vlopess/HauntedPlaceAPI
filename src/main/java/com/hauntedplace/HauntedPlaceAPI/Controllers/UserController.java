@@ -1,13 +1,8 @@
 package com.hauntedplace.HauntedPlaceAPI.Controllers;
 
-
-
-
-
 import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
-import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserFollowerService;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserService;
 import jakarta.transaction.Transactional;

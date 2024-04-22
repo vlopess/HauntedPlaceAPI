@@ -1,10 +1,6 @@
 package com.hauntedplace.HauntedPlaceAPI.DTOS;
 
 import com.hauntedplace.HauntedPlaceAPI.Entitys.*;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -22,9 +18,9 @@ public class UserDTO {
     private String profilePictureUrl;
     private String bio;
     private String localization;
-    private List<Tag> tags = new ArrayList<Tag>();
-    private List<Post> posts = new ArrayList<Post>();
-    private List<UserSocialMedia> socialMedias = new ArrayList<UserSocialMedia>();
+    private List<Tag> tags = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
+    private List<UserSocialMedia> socialMedias = new ArrayList<>();
 
     public UserDTO(){}
 

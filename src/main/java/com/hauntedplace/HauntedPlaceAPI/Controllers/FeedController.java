@@ -2,7 +2,6 @@ package com.hauntedplace.HauntedPlaceAPI.Controllers;
 
 import com.hauntedplace.HauntedPlaceAPI.Services.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

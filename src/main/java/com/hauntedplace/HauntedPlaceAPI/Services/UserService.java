@@ -1,23 +1,17 @@
 package com.hauntedplace.HauntedPlaceAPI.Services;
 
-import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
+
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.SocialMedia;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.UserSocialMedia;
 import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
 import com.hauntedplace.HauntedPlaceAPI.Repository.UserRepository;
 
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Optional;
 
 
