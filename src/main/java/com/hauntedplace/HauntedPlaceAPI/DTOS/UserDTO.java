@@ -1,8 +1,6 @@
 package com.hauntedplace.HauntedPlaceAPI.DTOS;
 
-import com.hauntedplace.HauntedPlaceAPI.Entitys.Post;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.Tag;
-import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
+import com.hauntedplace.HauntedPlaceAPI.Entitys.*;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -26,6 +24,7 @@ public class UserDTO {
     private String localization;
     private List<Tag> tags = new ArrayList<Tag>();
     private List<Post> posts = new ArrayList<Post>();
+    private List<UserSocialMedia> socialMedias = new ArrayList<UserSocialMedia>();
 
     public UserDTO(){}
 
@@ -105,5 +104,11 @@ public class UserDTO {
     }
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+    public List<UserSocialMedia> getSocialMedias() {
+        return socialMedias;
+    }
+    public void setSocialMedias(List<UserSocialMedia> socialMedias) {
+        this.socialMedias = socialMedias;
     }
 }
