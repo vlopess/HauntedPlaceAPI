@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,23 +30,23 @@ public class PostService {
         return post;
     }
 
-    public ResponseEntity<PostDTO> getPostById(Long id) {
+    public ResponseEntity<Object> getPostById(Long id) {
         var post = postRepository.findById(id).orElse(null);
         if (post == null) return  ResponseEntity.notFound().build();
         return  ResponseEntity.ok(new PostDTO(post));
     }
 
-    public ResponseEntity<List<PostDTO>> getPostAllUser(String username) {
+    public ResponseEntity<List<Object>> getAllUserPosts(String username) {
         var posts = postRepository.findByUserUsername(username);
         if (posts.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
+        return ResponseEntity.ok(Collections.singletonList(posts.stream().map(PostDTO::new).toList()));
     }
 
-    public ResponseEntity<PostDTO> update(Long id, PostDTO postDTO) {
+    public ResponseEntity<Object> update(Long id, PostDTO postDTO) {
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty()) return ResponseEntity.notFound().build();
-        postDTO.setId(id);
         Post newPost = new Post(postDTO);
+        newPost.setId(id);
         postRepository.save(newPost);
         return ResponseEntity.ok(postDTO);
     }
