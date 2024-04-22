@@ -38,16 +38,16 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_followers",
-            joinColumns = @JoinColumn(name = "user_followed_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_follower_id")
+            joinColumns = @JoinColumn(name = "user_follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_followed_id")
     )
     private List<User> following = new ArrayList<User>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_followers",
-            joinColumns = @JoinColumn(name = "user_follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_followed_id")
+            joinColumns = @JoinColumn(name = "user_followed_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_follower_id")
     )
     private List<User> followers = new ArrayList<User>();
 
@@ -133,6 +133,13 @@ public class User implements UserDetails {
         this.posts.add(post);
     }
 
+    public List<User> getFollowers(){
+        return this.followers;
+    }
+
+    public List<User> getFollowing(){
+        return this.following;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
