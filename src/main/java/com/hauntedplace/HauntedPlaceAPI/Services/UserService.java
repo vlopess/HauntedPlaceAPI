@@ -2,15 +2,22 @@ package com.hauntedplace.HauntedPlaceAPI.Services;
 
 import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
+import com.hauntedplace.HauntedPlaceAPI.Entitys.SocialMedia;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
+import com.hauntedplace.HauntedPlaceAPI.Entitys.UserSocialMedia;
+import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
 import com.hauntedplace.HauntedPlaceAPI.Repository.UserRepository;
 
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 
@@ -32,10 +39,10 @@ public class UserService {
         return user.map(value -> ResponseEntity.ok(new UserDTO(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<UserDTO> getUserByUsername(String username) {
+    public ResponseEntity<Object> getUserByUsername(String username) {
         UserDetails user = userRepository.findByUsername(username);
         if(user == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(new UserDTO((User) user));
+        return ResponseEntity.ok(new UserDetail((User) user));
     }
 
     public User addUser(UserDTO userDTO) {
@@ -48,7 +55,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public ResponseEntity<LoginDTO> updateUser(Long id, UserDTO userDTO) {
+    public ResponseEntity<Object> updateUser(Long id, UserDTO userDTO) {
         Optional<User> user = getUserById(id);
         if (user.isPresent()) {
             User newUser = user.get();
@@ -57,7 +64,12 @@ public class UserService {
             newUser.setLocalization(userDTO.getLocalization());
             newUser.setBio(userDTO.getBio());
             newUser.setProfilePictureUrl(userDTO.getProfilePictureUrl());
-            return ResponseEntity.ok(new LoginDTO(newUser));
+            newUser.getTags().clear();
+            userDTO.getTags().forEach(newUser::addTag);
+            newUser.getSocialMedias().clear();
+            userDTO.getSocialMedias().forEach(newUser.getSocialMedias()::add);
+            newUser = userRepository.saveAndFlush(newUser);
+            return ResponseEntity.ok(new UserDetail(newUser));
         }
         return ResponseEntity.notFound().build();
     }
@@ -71,3 +83,4 @@ public class UserService {
         return ResponseEntity.notFound().build();
     }
 }
+
