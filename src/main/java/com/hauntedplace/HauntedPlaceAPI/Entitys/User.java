@@ -72,6 +72,13 @@ public class User implements UserDetails {
         this.posts = userDTO.getPosts();
     }
 
+    public User(UserOverView userDTO) {
+        this.id = new EncryptedId(userDTO.encryptedId()).getDecrypted();
+        this.username = userDTO.username();
+        this.email = userDTO.username();
+        this.bio = userDTO.bio();
+    }
+
     public Long getId() {
         return id;
     }
