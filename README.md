@@ -16,3 +16,10 @@
 Esse projeto foi desenvolvido utilizando as seguintes tecnologias:
 
 ![](https://skillicons.dev/icons?i=java,spring)
+
+
+## Diagrama
+
+<div align="center">
+<img src="https://github.com/vlopess/HauntedPlaceAPI/blob/main/src/main/resources/static/diagrama.png?raw=true"/>
+</div>
