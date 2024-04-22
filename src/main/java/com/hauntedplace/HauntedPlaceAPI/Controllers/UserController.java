@@ -7,6 +7,8 @@ package com.hauntedplace.HauntedPlaceAPI.Controllers;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
+import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
+import com.hauntedplace.HauntedPlaceAPI.Services.UserFollowerService;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -23,10 +25,12 @@ import java.net.URI;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final UserFollowerService userFollowerService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserFollowerService userFollowerService) {
         this.userService = userService;
+        this.userFollowerService = userFollowerService;
     }
 
 
@@ -41,21 +45,52 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public ResponseEntity<Object> getUserById(@PathVariable String username) {
+        try {
+            return userService.getUserByUsername(username);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/register")
     public ResponseEntity<Object> addUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriBuilder) {
-        User user = userService.addUser(userDTO);
-        URI uri = uriBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).body("User added!");
+        try {
+            User user = userService.addUser(userDTO);
+            URI uri = uriBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
+            return ResponseEntity.created(uri).body("User added!");
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
-    @PutMapping("{id}")
+    @PostMapping("/{user_follower_id}/follower/{user_followed_id}")
+    public ResponseEntity<String> followerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
+        try {
+            return userFollowerService.followerUser(user_followed_id, user_follower_id);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{user_follower_id}/unfollow/{user_followed_id}")
+    public ResponseEntity<String> unFollowerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
+        try {
+            return userFollowerService.unFollowerUser(user_followed_id, user_follower_id);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<LoginDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        return userService.updateUser(id, userDTO);
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        try {
+            return userService.updateUser(id, userDTO);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
 
@@ -63,6 +98,10 @@ public class UserController {
     @Transactional
     @Secured("ROLE_ADMIN")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id){
-        return userService.deleteUser(id);
+        try {
+            return userService.deleteUser(id);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 }
