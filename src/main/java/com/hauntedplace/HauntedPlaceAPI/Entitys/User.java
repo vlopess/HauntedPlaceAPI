@@ -1,9 +1,13 @@
 package com.hauntedplace.HauntedPlaceAPI.Entitys;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
+import com.hauntedplace.HauntedPlaceAPI.Models.EncryptedId;
+import com.hauntedplace.HauntedPlaceAPI.Models.UserOverView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,6 +54,9 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "user_follower_id")
     )
     private List<User> followers = new ArrayList<User>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<UserSocialMedia> socialMedias = new ArrayList<UserSocialMedia>();
 
     public User(){}
 
@@ -139,6 +146,15 @@ public class User implements UserDetails {
 
     public List<User> getFollowing(){
         return this.following;
+    }
+    public List<UserSocialMedia> getSocialMedias(){
+        return this.socialMedias;
+    }
+    public void setSocialMedias(List<UserSocialMedia> socialMedias) {
+        this.socialMedias = socialMedias;
+    }
+    public void addSocialMedias(List<UserSocialMedia> socialMedias) {
+        this.socialMedias.addAll(socialMedias);
     }
 
     @Override
