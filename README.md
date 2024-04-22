@@ -9,7 +9,7 @@
 ## Apresentação
 
 
-**Haunted Place API** é a interface para manipulação dos dados da rede social **Haunted Place**. Seu intuito é servir para consumo para aplicação web e mobile da social midia.
+**Haunted Place API** é a interface para manipulação dos dados da rede social **Haunted Place**. Seu intuito é servir de consumo para aplicação web e mobile da social midia.
 
 ## Tecnologias utilizadas
 
