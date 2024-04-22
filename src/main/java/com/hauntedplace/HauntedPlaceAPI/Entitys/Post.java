@@ -33,7 +33,7 @@ public class Post {
     }
 
     public Post(PostDTO postDTO){
-        this.id = postDTO.getId();
+        //this.id = postDTO.getId();
         this.title = postDTO.getTitle();
         this.urlImage = postDTO.getUrlImage();
         this.user = new User(postDTO.getUser());
