@@ -39,6 +39,9 @@ public class SecurityConfigurations {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> {
                     requests.requestMatchers(HttpMethod.POST, "/user/register").permitAll();
+                    requests.requestMatchers(HttpMethod.POST, "/user/files/upload").permitAll();
+                    requests.requestMatchers(HttpMethod.GET, "/tags").permitAll();
+                    requests.requestMatchers(HttpMethod.GET, "/socialMedia").permitAll();
                     requests.requestMatchers(AUTH_WHITELIST).permitAll();
                     requests.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     requests.anyRequest().authenticated();
