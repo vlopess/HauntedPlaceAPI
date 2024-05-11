@@ -77,6 +77,12 @@ public class UserController {
         }
     }
 
+    private String getFileName(String profilePictureUrl) {
+        var strings = profilePictureUrl.split("/");
+        var filename =  Arrays.stream(strings).filter(s -> s.contains(".png") || s.contains(".jpeg") || s.contains(".jpg")).findFirst().get();
+        return filename.replace("?alt=media", "");
+    }
+
     @PostMapping("/{user_follower_id}/follower/{user_followed_id}")
     public ResponseEntity<String> followerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
         try {
