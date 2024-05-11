@@ -29,12 +29,14 @@ import java.util.Arrays;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final FirebaseStorageService firebaseStorageService;
     private final UserFollowerService userFollowerService;
 
     @Autowired
-    public UserController(UserService userService, UserFollowerService userFollowerService) {
+    public UserController(UserService userService, UserFollowerService userFollowerService, FirebaseStorageService firebaseStorageService) {
         this.userService = userService;
         this.userFollowerService = userFollowerService;
+        this.firebaseStorageService = firebaseStorageService;
     }
 
 
@@ -66,6 +68,8 @@ public class UserController {
             return ResponseEntity.created(uri).body("User added!");
         }catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -73,6 +77,26 @@ public class UserController {
     public ResponseEntity<String> followerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
         try {
             return userFollowerService.followerUser(user_followed_id, user_follower_id);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/files/upload")
+    public ResponseEntity<Object> uploadFileUser(@RequestParam("file") MultipartFile file){
+        try {
+            StringWrapper filePath = firebaseStorageService.upload(file);
+            return ResponseEntity.ok().body(filePath);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/files/remove/{filename}")
+    public ResponseEntity<Object> removeFileUser(@PathVariable String filename){
+        try {
+            StringWrapper filePath = firebaseStorageService.remove(filename);
+            return ResponseEntity.ok().body(filePath);
         }catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
