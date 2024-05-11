@@ -3,6 +3,7 @@ package com.hauntedplace.HauntedPlaceAPI.DTOS;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class UserDTO {
     private String email;
     @NotBlank(message="Enter password")
     private String password;
+    private MultipartFile profilePicture;
     private String profilePictureUrl;
     private String bio;
     private String localization;
