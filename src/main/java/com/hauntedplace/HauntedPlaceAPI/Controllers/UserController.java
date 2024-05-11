@@ -1,20 +1,29 @@
 package com.hauntedplace.HauntedPlaceAPI.Controllers;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.LoginDTO;
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
+import com.hauntedplace.HauntedPlaceAPI.Models.StringWrapper;
+import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
+import com.hauntedplace.HauntedPlaceAPI.Services.FirebaseStorageService;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserFollowerService;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.File;
 import java.net.URI;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/user")
@@ -35,8 +44,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserDTO> getUserById(@RequestParam Long id) {
-        return userService.getUserbyId(id);
+    public ResponseEntity<UserDetail> getUserById(@RequestParam String encryptedId) {
+        return userService.getUserbyId(encryptedId);
     }
 
     @GetMapping(value = "/{username}")
