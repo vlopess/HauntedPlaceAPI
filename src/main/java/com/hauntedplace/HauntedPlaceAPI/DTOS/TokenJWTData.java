@@ -1,4 +1,4 @@
 package com.hauntedplace.HauntedPlaceAPI.DTOS;
 
-public record TokenJWTData(String token) {
+public record TokenJWTData(String token, Long userID) {
 }
