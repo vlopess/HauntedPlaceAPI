@@ -3,6 +3,7 @@ package com.hauntedplace.HauntedPlaceAPI.Services;
 
 import com.hauntedplace.HauntedPlaceAPI.DTOS.UserDTO;
 import com.hauntedplace.HauntedPlaceAPI.Entitys.User;
+import com.hauntedplace.HauntedPlaceAPI.Models.EncryptedId;
 import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
 import com.hauntedplace.HauntedPlaceAPI.Repository.UserRepository;
 
@@ -28,9 +29,10 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public ResponseEntity<UserDTO> getUserbyId(Long id) {
+    public ResponseEntity<UserDetail> getUserbyId(String encryptedId) {
+        Long id = new EncryptedId(encryptedId).getDecrypted();
         Optional<User> user = userRepository.findById(id);
-        return user.map(value -> ResponseEntity.ok(new UserDTO(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return user.map(value -> ResponseEntity.ok(new UserDetail(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<Object> getUserByUsername(String username) {
