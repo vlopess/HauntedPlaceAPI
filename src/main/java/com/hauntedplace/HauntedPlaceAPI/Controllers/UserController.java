@@ -61,12 +61,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriBuilder) {
+    @Transactional
+    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriBuilder) throws Exception {
         try {
             User user = userService.addUser(userDTO);
             URI uri = uriBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
-            return ResponseEntity.created(uri).body("User added!");
-        }catch (Exception e){
+            return ResponseEntity.created(uri).body(new StringWrapper("User added!"));
+        }catch (DataIntegrityViolationException e){
+            if(userDTO.getProfilePictureUrl() != null){
+                firebaseStorageService.remove(getFileName(userDTO.getProfilePictureUrl()));
+            }
             return ResponseEntity.internalServerError().body(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
