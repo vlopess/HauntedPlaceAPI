@@ -81,26 +81,6 @@ public class UserController {
         return userFollowerService.followerUser(user_followed_id, user_follower_id);
     }
 
-    @PostMapping("/files/upload")
-    public ResponseEntity<Object> uploadFileUser(@RequestParam("file") MultipartFile file){
-        try {
-            StringWrapper filePath = firebaseStorageService.upload(file);
-            return ResponseEntity.ok().body(filePath);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/files/remove/{filename}")
-    public ResponseEntity<Object> removeFileUser(@PathVariable String filename){
-        try {
-            StringWrapper filePath = firebaseStorageService.remove(filename);
-            return ResponseEntity.ok().body(filePath);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-    }
-
     @DeleteMapping("/{user_follower_id}/unfollow/{user_followed_id}")
     public ResponseEntity<String> unFollowerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
         return userFollowerService.unFollowerUser(user_followed_id, user_follower_id);
