@@ -25,49 +25,28 @@ public class PostController {
 
     @PostMapping("/publicar")
     public ResponseEntity<String> postar(@RequestBody @Valid PostDTO postDTO, UriComponentsBuilder uriBuilder){
-        try {
-            var post = postService.save(postDTO);
-            URI uri = uriBuilder.path("/post/{id}").buildAndExpand(post.getEncryptedId()).toUri();
-            return ResponseEntity.created(uri).body("Post created!");
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-
+        var post = postService.save(postDTO);
+        URI uri = uriBuilder.path("/post/{id}").buildAndExpand(post.getEncryptedId()).toUri();
+        return ResponseEntity.created(uri).body("Post created!");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPostById(@PathVariable Long id){
-        try{
-            return postService.getPostById(id);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return postService.getPostById(id);
     }
 
     @GetMapping("/user/{username}")
     public ResponseEntity<List<Object>> getPostById(@PathVariable String username){
-        try{
-            return postService.getAllUserPosts(username);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(Collections.singletonList(e.getMessage()));
-        }
+        return postService.getAllUserPosts(username);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody PostDTO postDTO){
-        try{
-            return postService.update(id, postDTO);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return postService.update(id, postDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable Long id){
-        try{
-            return postService.deletePost(id);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return postService.deletePost(id);
     }
 }

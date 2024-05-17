@@ -20,11 +20,7 @@ public class FeedController {
 
     @GetMapping
     public ResponseEntity<List<Object>> getFeed(@RequestHeader Long user_followed_id) {
-        try{
-            return feedService.getPosts(user_followed_id);
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body(Collections.singletonList(e.getMessage()));
-        }
+        return feedService.getPosts(user_followed_id);
     }
 
 }

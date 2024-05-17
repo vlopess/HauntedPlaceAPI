@@ -52,12 +52,7 @@ public class UserController {
 
     @GetMapping(value = "/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable String username) {
-        try {
-            return userService.getUserByUsername(username);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-
+        return userService.getUserByUsername(username);
     }
 
     @PostMapping("/register")
@@ -72,8 +67,6 @@ public class UserController {
                 firebaseStorageService.remove(getFileName(userDTO.getProfilePictureUrl()));
             }
             return ResponseEntity.internalServerError().body(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -85,11 +78,7 @@ public class UserController {
 
     @PostMapping("/{user_follower_id}/follower/{user_followed_id}")
     public ResponseEntity<String> followerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
-        try {
-            return userFollowerService.followerUser(user_followed_id, user_follower_id);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return userFollowerService.followerUser(user_followed_id, user_follower_id);
     }
 
     @PostMapping("/files/upload")
@@ -114,21 +103,13 @@ public class UserController {
 
     @DeleteMapping("/{user_follower_id}/unfollow/{user_followed_id}")
     public ResponseEntity<String> unFollowerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
-        try {
-            return userFollowerService.unFollowerUser(user_followed_id, user_follower_id);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return userFollowerService.unFollowerUser(user_followed_id, user_follower_id);
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        try {
-            return userService.updateUser(id, userDTO);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return userService.updateUser(id, userDTO);
     }
 
 
@@ -136,10 +117,6 @@ public class UserController {
     @Transactional
     @Secured("ROLE_ADMIN")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id){
-        try {
-            return userService.deleteUser(id);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return userService.deleteUser(id);
     }
 }

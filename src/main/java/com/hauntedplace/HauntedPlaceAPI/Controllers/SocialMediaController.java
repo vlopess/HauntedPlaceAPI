@@ -23,14 +23,8 @@ public class SocialMediaController {
 
     @GetMapping
     public ResponseEntity<List<Object>> getAllSocialMedia() {
-        try{
-            var socialMedias = socialMediaService.findAll();
-            return ResponseEntity.ok(Collections.singletonList(socialMedias));
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(Collections.singletonList(e.getMessage()));
-
-        }
-
+        var socialMedias = socialMediaService.findAll();
+        return ResponseEntity.ok(Collections.singletonList(socialMedias));
     }
 }
 

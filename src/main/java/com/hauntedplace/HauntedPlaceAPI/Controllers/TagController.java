@@ -24,13 +24,8 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<List<Tag>> getAllTags() {
-        try {
-            var tags = tagService.getAllTags();
-
-            return ResponseEntity.ok(tags);
-        }catch (Exception e) {
-            return ResponseEntity.internalServerError().body(null);
-        }
+        var tags = tagService.getAllTags();
+        return ResponseEntity.ok(tags);
     }
 
 }

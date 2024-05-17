@@ -29,15 +29,10 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<Object> login(@RequestBody AuthData data){
-        try {
-            var token = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-            var authentication = authenticationManager.authenticate(token);
-            User user = (User) authentication.getPrincipal();
-            var tokenJWT = jwtokenService.generateToken(user);
-            return ResponseEntity.ok(new TokenJWTData(tokenJWT, user.getId()));
-        } catch (InternalAuthenticationServiceException e){
-            return null;
-                    //ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        var token = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var authentication = authenticationManager.authenticate(token);
+        User user = (User) authentication.getPrincipal();
+        var tokenJWT = jwtokenService.generateToken(user);
+        return ResponseEntity.ok(new TokenJWTData(tokenJWT, user.getId()));
     }
 }
