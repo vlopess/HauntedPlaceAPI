@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -74,8 +75,9 @@ public class FirebaseStorageService {
         }
     }
 
-    public StringWrapper remove(String filename) throws Exception {
+    public StringWrapper remove(String path) throws Exception {
         try {
+            var filename = getFileName(path);
             Storage storage = FirebaseStorageService.createStorageClient();
             BlobId blobId = BlobId.of(bucketName, filename);
             storage.delete(blobId);
@@ -83,5 +85,11 @@ public class FirebaseStorageService {
             throw new Exception("Image couldn't remove, Something went wrong");
         }
         return null;
+    }
+
+    private String getFileName(String profilePictureUrl) {
+        var strings = profilePictureUrl.split("/");
+        var filename =  Arrays.stream(strings).filter(s -> s.contains(".png") || s.contains(".jpeg") || s.contains(".jpg")).findFirst().get();
+        return filename.replace("?alt=media", "");
     }
 }

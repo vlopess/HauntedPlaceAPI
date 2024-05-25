@@ -7,6 +7,7 @@ import com.hauntedplace.HauntedPlaceAPI.Models.EncryptedId;
 import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
 import com.hauntedplace.HauntedPlaceAPI.Repository.UserRepository;
 
+import com.hauntedplace.HauntedPlaceAPI.Security.infra.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,16 +30,14 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public ResponseEntity<UserDetail> getUserbyId(String encryptedId) {
+    public UserDetail getUserbyId(String encryptedId) throws Exception {
         Long id = new EncryptedId(encryptedId).getDecrypted();
         Optional<User> user = userRepository.findById(id);
-        return user.map(value -> ResponseEntity.ok(new UserDetail(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return new UserDetail(unwrap(user));
     }
 
-    public ResponseEntity<Object> getUserByUsername(String username) {
-        UserDetails user = userRepository.findByUsername(username);
-        if(user == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(new UserDetail((User) user));
+    public UserDetails getUserByUsername(String username) {
+        return unwrap(userRepository.findByUsername(username));
     }
 
     public User addUser(UserDTO userDTO) {
@@ -51,7 +50,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public ResponseEntity<Object> updateUser(Long id, UserDTO userDTO) {
+    public UserDetail updateUser(Long id, UserDTO userDTO) {
         Optional<User> user = getUserById(id);
         if (user.isPresent()) {
             User newUser = user.get();
@@ -65,18 +64,19 @@ public class UserService {
             newUser.getSocialMedias().clear();
             userDTO.getSocialMedias().forEach(newUser.getSocialMedias()::add);
             newUser = userRepository.saveAndFlush(newUser);
-            return ResponseEntity.ok(new UserDetail(newUser));
+            return new UserDetail(newUser);
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException("User not found");
     }
 
-    public ResponseEntity<Object> deleteUser(Long id){
+    public void deleteUser(Long id){
         Optional<User> user = getUserById(id);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        user.ifPresent(userRepository::delete);
+        throw new NotFoundException("User not found");
+    }
+    static User unwrap(Optional<User> user) {
+        if(user.isPresent()) return user.get();
+        throw new NotFoundException("User not found");
     }
 }
 
