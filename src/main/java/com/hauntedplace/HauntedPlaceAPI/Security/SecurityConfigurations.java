@@ -1,6 +1,16 @@
-package com.hauntedplace.HauntedPlaceAPI.config;
+package com.hauntedplace.HauntedPlaceAPI.Security;
 
 
+import com.hauntedplace.HauntedPlaceAPI.Security.filters.AuthenticationFilter;
+import com.hauntedplace.HauntedPlaceAPI.Security.filters.ExceptionHandlingFilter;
+import com.hauntedplace.HauntedPlaceAPI.Security.filters.JWTAuthorizationFilter;
+import com.hauntedplace.HauntedPlaceAPI.Services.JWTokenService;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,17 +19,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfigurations {
-    private final SecurityFilter securityFilter;
+
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
             "/v3/api-docs/**",
@@ -28,13 +38,12 @@ public class SecurityConfigurations {
             "/swagger-ui.html"
     };
 
-    @Autowired
-    public SecurityConfigurations(final SecurityFilter securityFilter) {
-        this.securityFilter = securityFilter;
-    }
+
+
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationFilter authenticationFilter) throws Exception {
+        authenticationFilter.setFilterProcessesUrl("/authentication");
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> {
@@ -43,17 +52,21 @@ public class SecurityConfigurations {
                     requests.requestMatchers(HttpMethod.GET, "/tags").permitAll();
                     requests.requestMatchers(HttpMethod.GET, "/socialMedia").permitAll();
                     requests.requestMatchers(AUTH_WHITELIST).permitAll();
-                    requests.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                    requests.requestMatchers(HttpMethod.POST, "/authentication").permitAll();
                     requests.anyRequest().authenticated();
                 })
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlingFilter(), AuthenticationFilter.class)
+                .addFilter(authenticationFilter)
+                .addFilterAfter(new JWTAuthorizationFilter(new JWTokenService()), AuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
