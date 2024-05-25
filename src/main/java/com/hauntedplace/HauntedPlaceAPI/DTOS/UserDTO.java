@@ -26,6 +26,12 @@ public class UserDTO {
 
     public UserDTO(){}
 
+    public UserDTO(String username, String email, String password){
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
