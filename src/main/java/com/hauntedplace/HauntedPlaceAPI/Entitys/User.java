@@ -20,8 +20,8 @@ public class User implements UserDetails {
     private Long id;
     @Column(unique = true)
     private String username;
-    private String email;
     @Column(unique = true)
+    private String email;
     private String password;
     private String profilePictureUrl;
     private String bio;
@@ -58,6 +58,16 @@ public class User implements UserDetails {
     private List<UserSocialMedia> socialMedias = new ArrayList<>();
 
     public User(){}
+
+    public User(Long id, String username, String email, String password, String profilePictureUrl, String bio, String localization) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.profilePictureUrl = profilePictureUrl;
+        this.bio = bio;
+        this.localization = localization;
+    }
 
     public User(UserDTO userDTO) {
         this.id = userDTO.getId();
@@ -150,8 +160,16 @@ public class User implements UserDetails {
         return this.followers;
     }
 
+    public void addFollower(User user){
+        this.followers.add(user);
+    }
+
     public List<User> getFollowing(){
         return this.following;
+    }
+
+    public void addFollowing(User user){
+        this.following.add(user);
     }
     public List<UserSocialMedia> getSocialMedias(){
         return this.socialMedias;
