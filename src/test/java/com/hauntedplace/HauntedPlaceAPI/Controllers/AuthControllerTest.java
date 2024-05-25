@@ -3,6 +3,7 @@ package com.hauntedplace.HauntedPlaceAPI.Controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hauntedplace.HauntedPlaceAPI.Models.AuthData;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -24,6 +25,7 @@ import static org.springframework.mock.http.server.reactive.MockServerHttpReques
 @SpringBootTest
 @WithMockUser
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class AuthControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -34,8 +36,8 @@ class AuthControllerTest {
     @Test
     @DisplayName("Testa um login com sucesso")
     public void testLoginSuccess() throws Exception {
-        var login = new AuthData("victorlopes9291@gmail.com", "123123");
-        mvc.perform(MockMvcRequestBuilders.post("/login")
+        var login = new AuthData("samira@gmail.com", "123123");
+        mvc.perform(MockMvcRequestBuilders.post("/authentication")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -45,8 +47,8 @@ class AuthControllerTest {
     @Test
     @DisplayName("Testa um login com credenciais inválidas")
     public void testLoginError() throws Exception {
-        var login = new AuthData("victorlopes9291@gmail.com", "12323");
-        mvc.perform(MockMvcRequestBuilders.post("/login")
+        var login = new AuthData("samira@gmail.com", "12323");
+        mvc.perform(MockMvcRequestBuilders.post("/authentication")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
