@@ -59,4 +59,26 @@ public class SecurityConfigurations {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationFilter authenticationFilter(AuthenticationManager authenticationManager, JWTokenService jwtTokenService) {
+        return new AuthenticationFilter(authenticationManager, jwtTokenService);
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .components(new Components()
+                .addSecuritySchemes("bearer-key",
+                new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")))
+                .info(new Info()
+                .title("Haunted Place API")
+                .description("API Rest da aplicação Haunted Place")
+                .contact(new Contact()
+                .name("Developer")
+                .email("victordev8@gmail.com")));
+    }
 }
