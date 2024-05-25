@@ -1,12 +1,13 @@
-package com.hauntedplace.HauntedPlaceAPI.config.infra;
+package com.hauntedplace.HauntedPlaceAPI.Security.infra.ExceptionHandler;
 
+import com.hauntedplace.HauntedPlaceAPI.Security.infra.NotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity handleEntityNotFoundException(EntityNotFoundException e) {
+    @ExceptionHandler({EntityNotFoundException.class, NotFoundException.class})
+    public ResponseEntity handleEntityNotFoundException(RuntimeException e) {
         return ResponseEntity.notFound().build();
     }
 
@@ -24,9 +25,15 @@ public class ErrorHandler {
         return ResponseEntity.badRequest().build();
     }
 
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity handleExceptionFollower(Exception e) {
+        return ResponseEntity.badRequest().body("is Already Followed!");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException500(Exception e) {
-        return ResponseEntity.internalServerError().body("Error:" + e.getLocalizedMessage());
+        return ResponseEntity.internalServerError().body(e.getLocalizedMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
