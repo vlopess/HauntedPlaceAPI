@@ -2,6 +2,8 @@ package com.hauntedplace.HauntedPlaceAPI.Controllers;
 
 import com.hauntedplace.HauntedPlaceAPI.Models.StringWrapper;
 import com.hauntedplace.HauntedPlaceAPI.Services.FirebaseStorageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,12 +26,14 @@ public class FileController {
 
 
     @PostMapping("/files/upload")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<Object> uploadFileUser(@RequestParam("file") MultipartFile file){
         StringWrapper filePath = firebaseStorageService.upload(file);
         return ResponseEntity.ok().body(filePath);
     }
 
     @PostMapping("/files/remove/{filename}")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<Object> removeFileUser(@PathVariable String filename) throws Exception {
         StringWrapper filePath = firebaseStorageService.remove(filename);
         return ResponseEntity.ok().body(filePath);

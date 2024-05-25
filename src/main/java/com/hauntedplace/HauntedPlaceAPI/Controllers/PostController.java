@@ -2,6 +2,8 @@ package com.hauntedplace.HauntedPlaceAPI.Controllers;
 
 import com.hauntedplace.HauntedPlaceAPI.DTOS.PostDTO;
 import com.hauntedplace.HauntedPlaceAPI.Services.PostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ public class PostController {
     }
 
     @PostMapping("/publicar")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<String> postar(@RequestBody @Valid PostDTO postDTO, UriComponentsBuilder uriBuilder){
         var post = postService.save(postDTO);
         URI uri = uriBuilder.path("/post/{id}").buildAndExpand(post.getEncryptedId()).toUri();
@@ -31,22 +34,33 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPostById(@PathVariable Long id){
-        return postService.getPostById(id);
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
+    public ResponseEntity<Object> getPostById(@PathVariable Long id) throws Exception {
+        var post = postService.getPostById(id);
+        return  ResponseEntity.ok(new PostDTO(post));
+
     }
 
     @GetMapping("/user/{username}")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<List<Object>> getPostById(@PathVariable String username){
-        return postService.getAllUserPosts(username);
+        var posts = postService.getAllUserPosts(username);
+        return ResponseEntity.ok(Collections.singletonList(posts.stream().map(PostDTO::new).toList()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody PostDTO postDTO){
-        return postService.update(id, postDTO);
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
+    public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody PostDTO postDTO) throws Exception {
+        var post = postService.update(id, postDTO);
+        return ResponseEntity.ok(post);
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletePost(@PathVariable Long id){
-        return postService.deletePost(id);
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
+    public ResponseEntity<Object> deletePost(@PathVariable Long id) throws Exception {
+        postService.deletePost(id);
+        return ResponseEntity.ok("delete was successful!");
+
     }
 }

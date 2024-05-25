@@ -9,6 +9,8 @@ import com.hauntedplace.HauntedPlaceAPI.Models.UserDetail;
 import com.hauntedplace.HauntedPlaceAPI.Services.FirebaseStorageService;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserFollowerService;
 import com.hauntedplace.HauntedPlaceAPI.Services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +43,24 @@ public class UserController {
 
 
     @GetMapping("/users")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public Page<LoginDTO> getAllUsers(Pageable pageable) {
         return LoginDTO.convert(userService.getAllUsers(pageable));
     }
 
     @GetMapping
-    public ResponseEntity<UserDetail> getUserById(@RequestParam String encryptedId) {
-        return userService.getUserbyId(encryptedId);
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
+    public ResponseEntity<UserDetail> getUserById(@RequestParam String encryptedId) throws Exception {
+        var user = userService.getUserbyId(encryptedId);
+        return ResponseEntity.ok(user);
+
     }
 
     @GetMapping(value = "/{username}")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<Object> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+        var user =  userService.getUserByUsername(username);
+        return ResponseEntity.ok(new UserDetail((User) user));
     }
 
     @PostMapping("/register")
@@ -64,32 +72,32 @@ public class UserController {
             return ResponseEntity.created(uri).body(new StringWrapper("User added!"));
         }catch (DataIntegrityViolationException e){
             if(userDTO.getProfilePictureUrl() != null){
-                firebaseStorageService.remove(getFileName(userDTO.getProfilePictureUrl()));
+                firebaseStorageService.remove(userDTO.getProfilePictureUrl());
             }
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    private String getFileName(String profilePictureUrl) {
-        var strings = profilePictureUrl.split("/");
-        var filename =  Arrays.stream(strings).filter(s -> s.contains(".png") || s.contains(".jpeg") || s.contains(".jpg")).findFirst().get();
-        return filename.replace("?alt=media", "");
-    }
-
     @PostMapping("/{user_follower_id}/follower/{user_followed_id}")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<String> followerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
-        return userFollowerService.followerUser(user_followed_id, user_follower_id);
+        userFollowerService.followerUser(user_followed_id, user_follower_id);
+        return ResponseEntity.ok("followed!");
     }
 
     @DeleteMapping("/{user_follower_id}/unfollow/{user_followed_id}")
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<String> unFollowerUser(@PathVariable Long user_followed_id, @PathVariable  Long user_follower_id){
-        return userFollowerService.unFollowerUser(user_followed_id, user_follower_id);
+        userFollowerService.unFollowerUser(user_followed_id, user_follower_id);
+        return ResponseEntity.ok("unfollowed!");
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        return userService.updateUser(id, userDTO);
+    @Operation(summary = "Autorização necessária", security = @SecurityRequirement(name = "bearer-key"))
+    public ResponseEntity<UserDetail> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        var userUpdated = userService.updateUser(id, userDTO);
+        return ResponseEntity.ok(userUpdated);
     }
 
 
@@ -97,6 +105,7 @@ public class UserController {
     @Transactional
     @Secured("ROLE_ADMIN")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id){
-        return userService.deleteUser(id);
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
